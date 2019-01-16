@@ -1,4 +1,4 @@
-FROM php:7.0-apache
+FROM php:7.3-apache
 
 COPY errors.ini /usr/local/etc/php/conf.d/errors.ini
 COPY apache2.conf /etc/apache2/apache2.conf
