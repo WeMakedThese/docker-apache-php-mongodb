@@ -17,6 +17,17 @@ RUN a2enmod rewrite
 RUN pecl install mongodb \
     && docker-php-ext-enable mongodb
 
+RUN apt-get update && apt-get install -y libapache2-mod-geoip geoip-database-extra
+COPY geoip.conf /etc/apache2/mods-available/geoip.conf
+COPY remoteip.conf  /etc/apache2/mods-available/remoteip.conf
+RUN a2enmod remoteip
+
+RUN \
+  curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-9.3.0.248-linux.tar.gz | tar -C /tmp -zx && \
+   export NR_INSTALL_USE_CP_NOT_LN=1 && \
+    export NR_INSTALL_SILENT=1 && \
+     /tmp/newrelic-php5-*/newrelic-install install && \
+      rm -rf /tmp/newrelic-php5-* /tmp/nrinstall*
 
 RUN curl http://de.archive.ubuntu.com/ubuntu/pool/universe/f/fonts-open-sans/fonts-open-sans_1.11-1_all.deb -o opensans.deb            && \
     curl -L https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.stretch_amd64.deb -o wkhtmltox.deb  && \
